@@ -527,6 +527,30 @@ textarea.input{height:auto;min-height:74px;padding:10px 14px;resize:vertical;lin
 .sum-bar i{display:block;height:100%;border-radius:6px}
 .sum-row .sn{width:90px;font-size:12.5px;color:var(--txt-2);font-weight:500;flex-shrink:0}
 .sum-row .sv{width:96px;text-align:left;font-weight:700;font-size:13px;flex-shrink:0}
+/* AI document generator steps */
+.docgen-steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:2px 0 4px}
+.dg-step{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--txt-3)}
+.dg-step .dg-num{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-size:11px}
+.dg-step.on{color:var(--clay)}
+.dg-step.on .dg-num{background:var(--clay);color:#fff;border-color:transparent}
+.dg-line{flex:1;height:1px;background:var(--line);min-width:10px}
+/* Company profile builder */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.type-card{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r);background:#fff;text-align:right;transition:.15s;position:relative;width:100%}
+.type-card:hover{border-color:var(--steel-2)}
+.type-card.on{border-color:var(--clay);background:var(--clay-bg);box-shadow:0 0 0 3px rgba(110,86,207,.12)}
+.type-card .tc-ico{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:var(--clay-bg);color:var(--clay)}
+.type-card.on .tc-ico{background:#fff}
+.type-card .tc-b{min-width:0}
+.type-card .tc-b b{display:block;font-size:13.5px;font-weight:700}
+.type-card .tc-b span{font-size:11.5px;color:var(--txt-3);line-height:1.4;display:block;margin-top:2px}
+.type-card .tc-check{position:absolute;top:12px;left:12px;color:var(--clay);opacity:0;transition:.15s}
+.type-card.on .tc-check{opacity:1}
+.prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.prof-stat{text-align:center;padding:12px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
+.prof-stat b{display:block;font-size:22px;font-weight:800;color:var(--clay);line-height:1.2}
+.prof-stat span{font-size:11px;color:var(--txt-3)}
+@media(max-width:560px){.prof-stats{grid-template-columns:repeat(2,1fr)}}
 /* misc */
 .stack-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 </style>
@@ -660,6 +684,9 @@ const ic = {
   link: I('<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>', 15),
   robot: I('<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V4M8 3h8"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><path d="M2 13v2M22 13v2"/>'),
   camSm: I('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>', 15),
+  folder: I('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
+  filePlus: I('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/>'),
+  mail: I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),
 };
 const pages = {};
 const crumbs = (...c) => `<div class="crumbs">${c.map((x,i)=>i===c.length-1?`<b>${x}</b>`:`<span>${x}</span>${ic.chevL}`).join('')}</div>`;
@@ -1394,6 +1421,213 @@ pages.profile = () => `
 </div>`;
 
 /* ══════════════════════════════════════════════
+   MQWEL+ · pages/docCenter.js — مركز المستندات
+   نفس أقسام الملف المرفوع، بنظام واجهة مقاول بلس
+   ══════════════════════════════════════════════ */
+const docActs = () => `<div class="row-actions">
+  <button class="act" data-tip="معاينة" onclick="toast('معاينة المستند')">${ic.eye}</button>
+  <button class="act" data-tip="تعديل" onclick="toast('فتح محرّر النموذج')">${ic.edit}</button>
+  <button class="act" data-tip="تحميل PDF" onclick="toast('جاري تجهيز ملف PDF…')">${ic.pdf}</button>
+  <button class="act" data-tip="إرسال واتساب" onclick="toast('إرسال المستند عبر واتساب…')">${ic.whatsapp}</button>
+  <button class="act danger" data-tip="حذف" onclick="confirmDelete()">${ic.trash}</button>
+</div>`;
+
+const TPL_OPTIONS = ['عقد مقاول باطن','عقد مقاول رئيسي','عقد توريد مواد','عرض سعر','طلب شراء','خطاب مطالبة مالية','خطاب ترسية','خطاب تسليم واستلام','خطاب رسمي','محضر استلام','محضر اجتماع','مراسلة عميل / مورد'];
+
+function openDocGen(preset){
+  const steps = ['التحقق من النماذج','توليد المستند','المراجعة','الإخراج النهائي'];
+  document.getElementById('modalBox').innerHTML = `
+    <div class="modal-head"><div><h3>إنشاء مستند <span class="ai-tag">${ic.sparkles} AI</span></h3><p>يولّد المساعد الذكي المستند من نموذج جاهز ويربطه بمشروعك.</p></div><button class="modal-x" aria-label="إغلاق" onclick="closeModal()">${ic.x}</button></div>
+    <div class="modal-body">
+      <div class="docgen-steps">${steps.map((s,i)=>`${i?'<span class="dg-line"></span>':''}<div class="dg-step ${i===0?'on':''}"><span class="dg-num num">${i+1}</span><span>${s}</span></div>`).join('')}</div>
+      <div class="field"><label>نوع المستند <span class="req">*</span></label><input class="input" list="tplList" value="${preset||''}" placeholder="اختر أو اكتب نوع المستند"><datalist id="tplList">${TPL_OPTIONS.map(o=>`<option value="${o}">`).join('')}</datalist></div>
+      <div class="grid2">
+        <div class="field"><label>ربط المشروع</label><select class="select"><option>عام</option><option>مشروع مسقط</option><option>مشروع نزوى</option><option>مشروع صلالة</option></select></div>
+        <div class="field"><label>الجهة</label><input class="input" placeholder="العميل / المورد"></div>
+      </div>
+      <div class="field"><label>تفاصيل إضافية</label><textarea class="input" placeholder="القيمة، المدة، شروط الدفع…"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="closeModal();toast('🤖 جاري إنشاء المستند بالذكاء الاصطناعي…')">${ic.sparkles} توليد المستند</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`;
+  showVeil();
+}
+
+pages.docCenter = () => {
+  const drow = (name,sub,ini,proj,stTxt,stTone,extra,date)=>`<tr>
+    <td>${avatarCell(name,sub,ini)}</td>
+    <td class="td-muted">${proj}</td>
+    <td>${chip(stTxt,stTone)}</td>
+    <td class="td-muted">${extra}</td>
+    <td class="num td-dim">${date}</td>
+    <td>${docActs()}</td></tr>`;
+  const headDoc = `${th('المستند')}${th('المشروع')}${th('الحالة')}${th('التفاصيل')}${th('التاريخ')}<th>اجراءات</th>`;
+  const dtable = (tid,note,rows)=>`<section class="card">
+    ${toolbar({tid,ph:'بحث عن مستند…',note})}
+    <div class="table-wrap"><table class="dt" id="${tid}"><thead><tr>${headDoc}</tr></thead><tbody>${rows}</tbody></table></div>
+  </section>`;
+
+  const mine = drow('عقد مقاول باطن','أعمال الكهرباء','عق','مشروع نزوى','قيد المراجعة','warn','12,500 ر.ع','10 يوليو 2025')
+    + drow('عرض سعر','توريد وتركيب','عر','مشروع مسقط','مُرسَل','info','8,200 ر.ع','5 يوليو 2025')
+    + drow('خطاب مطالبة مالية','الدفعة الثانية','خط','مشروع نزوى','موقّع','ok','4,200 ر.ع','1 يوليو 2025')
+    + drow('محضر استلام','المرحلة 2','مح','مشروع صلالة','مكتمل','ok','—','28 يونيو 2025');
+  const contracts = drow('عقد مقاول باطن','أعمال الكهرباء','عق','مشروع نزوى','قيد التنفيذ','info','12,500 ر.ع','—')
+    + drow('عقد توريد مواد','حديد وإسمنت','عت','مشروع مسقط','نشط','ok','45,000 ر.ع','—')
+    + drow('عقد مقاول رئيسي','نزوى السكني','عر','مشروع نزوى','نشط','ok','120,000 ر.ع','—');
+  const quotes = drow('عرض سعر','مشروع مسقط','عر','مشروع مسقط','مُرسَل','info','8,200 ر.ع','5 يوليو 2025')
+    + drow('عرض سعر','أعمال إضافية','عر','مشروع مسقط','جديد','neutral','4,200 ر.ع','12 يوليو 2025');
+  const letters = drow('خطاب مطالبة مالية','الدفعة الثانية','خط','مشروع نزوى','موقّع','ok','4,200 ر.ع','1 يوليو 2025')
+    + drow('خطاب ترسية','ترسية مناقصة','خت','مشروع مسقط','مُرسَل','info','—','10 يوليو 2025')
+    + drow('خطاب رسمي','جهة حكومية','خر','عام','جديد','neutral','—','—');
+  const mail = drow('مراسلة عميل / مورد','مورد الحجر','مر','عام','نشط','ok','—','أسبوع')
+    + drow('محضر اجتماع','مراجعة شهر يونيو','مج','مشروع نزوى','مكتمل','ok','—','—');
+
+  const tpl = (name,cat,used)=>`<div class="entity-card">
+    <div class="ec-head"><span class="ec-av">${ic.file}</span><div class="ec-id"><b>${name}</b><span>${cat}</span></div></div>
+    <div class="ec-rows"><div class="r"><span class="k">آخر استخدام</span><span class="v">${used}</span></div></div>
+    <div class="ec-foot"><button class="btn btn-primary btn-sm" onclick="openDocGen('${name}')">${ic.sparkles} إنشاء</button><button class="btn btn-ghost btn-sm" onclick="toast('تعديل النموذج')">${ic.edit} تعديل</button></div>
+  </div>`;
+  const templates = [
+    ['عقد مقاول باطن','عقود','قبل 3 أيام'],['عقد مقاول رئيسي','عقود','قبل أسبوع'],['عقد توريد مواد','عقود','قبل أسبوعين'],
+    ['عرض سعر','عروض أسعار','أمس'],['طلب شراء','مشتريات','قبل أسبوع'],['خطاب مطالبة مالية','خطابات','قبل شهر'],
+    ['خطاب ترسية','خطابات','قبل أسبوع'],['خطاب تسليم واستلام','خطابات','قبل أسبوعين'],['محضر استلام','محاضر','قبل 3 أيام'],
+    ['محضر اجتماع','محاضر','قبل شهر'],['مراسلة عميل / مورد','مراسلات','أمس'],['خطاب رسمي','خطابات','قبل شهر'],
+  ].map(t=>tpl(t[0],t[1],t[2])).join('');
+
+  return `<div class="page">
+  ${pageHead({ crumbs:['الشركة','مركز المستندات'], title:'مركز المستندات', sub:'أنشئ العقود والعروض والخطابات والمراسلات من نماذج جاهزة، وولّدها بالذكاء الاصطناعي.',
+    actions:`<button class="btn btn-ghost" onclick="toast('استيراد مستند…')">${ic.dl} استيراد</button>
+             <button class="btn btn-primary" onclick="openDocGen()">${ic.filePlus} مستند جديد</button>` })}
+  <div class="pay-tabs">
+    <button class="pay-tab on" onclick="payTab(this,'dcMine')">${ic.file}<span>مستنداتي</span><span class="cnt num">4</span></button>
+    <button class="pay-tab" onclick="payTab(this,'dcContracts')">${ic.handshake}<span>العقود</span><span class="cnt num">3</span></button>
+    <button class="pay-tab" onclick="payTab(this,'dcQuotes')">${ic.coins}<span>عروض أسعار</span><span class="cnt num">2</span></button>
+    <button class="pay-tab" onclick="payTab(this,'dcLetters')">${ic.file}<span>خطابات</span><span class="cnt num">3</span></button>
+    <button class="pay-tab" onclick="payTab(this,'dcMail')">${ic.mail}<span>مراسلات</span><span class="cnt num">2</span></button>
+    <button class="pay-tab" onclick="payTab(this,'dcTemplates')">${ic.folder}<span>مكتبة النماذج</span><span class="cnt num">12</span></button>
+  </div>
+  <div class="pay-panel" data-key="dcMine">${dtable('tDcMine','4 مستندات',mine)}</div>
+  <div class="pay-panel" data-key="dcContracts" hidden>${dtable('tDcCon','3 عقود',contracts)}</div>
+  <div class="pay-panel" data-key="dcQuotes" hidden>${dtable('tDcQuo','عرضان',quotes)}</div>
+  <div class="pay-panel" data-key="dcLetters" hidden>${dtable('tDcLet','3 خطابات',letters)}</div>
+  <div class="pay-panel" data-key="dcMail" hidden>${dtable('tDcMail','مراسلتان',mail)}</div>
+  <div class="pay-panel" data-key="dcTemplates" hidden><section class="card"><div class="card-grid">${templates}</div></section></div>
+</div>`;
+};
+
+/* ══════════════════════════════════════════════
+   MQWEL+ · pages/companyProfile.js — ملف الشركة
+   صفحة واحدة تجمع أقسام باني الملف التعريفي/التأهيلي
+   ══════════════════════════════════════════════ */
+function selectFileType(btn){
+  document.querySelectorAll('.type-card').forEach(c=>c.classList.toggle('on', c===btn));
+  toast('تم اختيار نوع الملف — عدّل المحتوى ثم أنشئ');
+}
+function profStyle(btn){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b===btn));
+  toast('نمط المعاينة: '+btn.textContent.trim());
+}
+
+pages.companyProfile = () => {
+  const typeCard = (icon,name,desc,on)=>`<button class="type-card ${on?'on':''}" onclick="selectFileType(this)">
+    <span class="tc-ico">${icon}</span>
+    <span class="tc-b"><b>${name}</b><span>${desc}</span></span>
+    <span class="tc-check">${ic.checkCircle}</span>
+  </button>`;
+  const types = `<div class="type-grid">
+    ${typeCard(ic.building,'ملف تعريفي للشركة','تعريف شامل عن الشركة وخدماتها',true)}
+    ${typeCard(ic.file,'ملف للمناقصات','ملف مخصص للتقديم على المناقصات',false)}
+    ${typeCard(ic.shield,'ملف للتأهيل','التأهل لمشاريع حكومية وكبرى',false)}
+    ${typeCard(ic.handshake,'عرض لعميل جديد','تقديم خدمات وعروض للعميل',false)}
+    ${typeCard(ic.coins,'ملف لشريك أو مستثمر','عرض القدرات والفرص الاستثمارية',false)}
+    ${typeCard(ic.gear,'ملف متخصص','اختر المحتوى بنفسك بحرية',false)}
+  </div>`;
+
+  const cGroup = (title,items)=>`<section class="card" style="padding:18px 20px">
+    <div class="sec-lbl" style="margin-bottom:12px">${title}</div>
+    ${items.map(it=>permRow(it[0],it[1],it[2])).join('')}
+  </section>`;
+  const content = `
+    <div class="split-2">
+      ${cGroup('🏢 معلومات الشركة',[['الرؤية والرسالة','نبذة تعريفية عن الشركة',true],['التخصصات والخدمات','قائمة الخدمات المقدّمة',true],['مناطق العمل','المدن والمناطق المغطّاة',false]])}
+      ${cGroup('📈 المؤشرات الرئيسية',[['سنوات الخبرة','عدد سنوات العمل',true],['المشاريع المنجزة','إجمالي المشاريع',true],['عدد الموظفين والمعدات','الطاقة التشغيلية',true],['أعلى قيمة مشروع','أكبر مشروع منفّذ',false]])}
+    </div>
+    <div class="split-2" style="margin-top:16px">
+      ${cGroup('📍 المشاريع',[['المشاريع البارزة','أبرز المشاريع',true],['المشاريع حسب القطاع','تصنيف قطاعي',false],['عرض جميع المشاريع','السجل الكامل',true]])}
+      ${cGroup('🏅 الاعتمادات والشهادات',[['تصنيف الشركة','درجة التصنيف',true],['الشهادات المهنية','شهادات الجودة',true],['التراخيص والاعتمادات','التراخيص السارية',true]])}
+    </div>
+    <div class="split-2" style="margin-top:16px">
+      ${cGroup('📞 بيانات التواصل',[['معلومات التواصل','الهاتف والبريد',true],['الموقع الإلكتروني','رابط الموقع',false],['حسابات التواصل الاجتماعي','روابط التواصل',false]])}
+      ${cGroup('👥 الموارد والمعدات',[['الهيكل التنظيمي','فرق العمل',false],['الفريق الإداري','الكوادر القيادية',false],['المعدات الرئيسية','الآليات والمعدات',true]])}
+    </div>`;
+
+  const stat = (v,l)=>`<div class="prof-stat"><b class="num">${v}</b><span>${l}</span></div>`;
+  const svc = (t)=>chip(t,'neutral');
+  const preview = `<section class="card">
+    <div class="panel-head"><div><h2 class="panel-title">معاينة الملف</h2><p class="panel-sub">كيف سيظهر الملف عند التصدير</p></div>
+      <div class="seg"><button class="on" onclick="profStyle(this)">تعريفي</button><button onclick="profStyle(this)">وثيقة تأهيل</button><button onclick="profStyle(this)">عرض تقديمي</button></div>
+    </div>
+    <div class="chart-pad" style="display:grid;gap:16px">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <span class="ec-av" style="width:56px;height:56px;border-radius:14px;background:var(--ink);color:#fff">ش</span>
+        <div style="flex:1;min-width:0"><b style="font-size:16px;display:block">شركة البناء المتطور</b><span style="font-size:12.5px;color:var(--txt-3)">مقاولات عامة — سلطنة عُمان · مسقط</span></div>
+        ${chip('سجل تجاري ساري','ok')}
+      </div>
+      <div><div class="sec-lbl">أرقام الشركة</div>
+        <div class="prof-stats">${stat('12','سنة خبرة')}${stat('48','مشروع منجز')}${stat('120','موظف')}${stat('15','معدة')}</div>
+      </div>
+      <div><div class="sec-lbl">الخدمات</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${svc('إنشاءات مدنية')}${svc('الطرق والبنية التحتية')}${svc('أعمال الصرف الصحي')}${svc('التشطيبات')}</div>
+      </div>
+      <div><div class="sec-lbl">المشاريع المنجزة</div>
+        <div class="table-wrap"><table class="dt" id="tProfProj"><thead><tr>${th('المشروع')}${th('النوع')}${th('القيمة')}${th('الحالة')}</tr></thead><tbody>
+          <tr><td class="td-muted">نزوى السكني</td><td class="td-muted">إنشاءات</td><td class="num">٤٥,٠٠٠ ر.ع</td><td>${chip('نشط','info')}</td></tr>
+          <tr><td class="td-muted">مسقط التجاري</td><td class="td-muted">تشطيبات</td><td class="num">٢٨,٠٠٠ ر.ع</td><td>${chip('منجز','ok')}</td></tr>
+          <tr><td class="td-muted">صلالة الطرق</td><td class="td-muted">بنية تحتية</td><td class="num">٦٢,٠٠٠ ر.ع</td><td>${chip('منجز','ok')}</td></tr>
+        </tbody></table></div>
+      </div>
+      <div><div class="sec-lbl">التصنيفات والشهادات</div>
+        <div class="table-wrap"><table class="dt" id="tProfCert"><thead><tr>${th('الشهادة')}${th('الجهة')}${th('الحالة')}</tr></thead><tbody>
+          <tr><td class="td-muted">تصنيف المقاولين — درجة أولى</td><td class="td-muted">وزارة الاقتصاد</td><td>${chip('سارية','ok')}</td></tr>
+          <tr><td class="td-muted">السجل التجاري</td><td class="td-muted">وزارة التجارة</td><td>${chip('ساري','ok')}</td></tr>
+          <tr><td class="td-muted">عضوية الغرفة</td><td class="td-muted">غرفة التجارة</td><td>${chip('سارية','ok')}</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+  </section>`;
+
+  const completion = `<section class="card">
+    <div class="panel-head" style="padding-bottom:10px"><div><h2 class="panel-title">اكتمال الملف</h2><p class="panel-sub">أكمل الأقسام لرفع جاهزية الملف</p></div><span class="chip info"><i></i>67%</span></div>
+    <div class="goal"><div class="goal-top"><b>المعلومات الأساسية</b><span class="goal-meta">مكتملة</span></div><div class="goal-bar"><div class="goal-fill" style="width:90%;background:#12A594"></div></div><span class="goal-pct num">90%</span></div>
+    <div class="goal"><div class="goal-top"><b>الاعتمادات والشهادات</b><span class="goal-meta">شبه مكتملة</span></div><div class="goal-bar"><div class="goal-fill" style="width:70%;background:#6E56CF"></div></div><span class="goal-pct num">70%</span></div>
+    <div class="goal"><div class="goal-top"><b>بيانات التواصل</b><span class="goal-meta">ناقصة</span></div><div class="goal-bar"><div class="goal-fill" style="width:40%;background:#F5A524"></div></div><span class="goal-pct num">40%</span></div>
+  </section>`;
+
+  return `<div class="page">
+  ${pageHead({ crumbs:['الشركة','ملف الشركة'], title:'ملف الشركة', sub:'أنشئ ملفاً تعريفياً أو تأهيلياً للشركة، اختر نوعه ومحتواه، ثم صدّره PDF أو أرسله عبر واتساب.',
+    actions:`<button class="btn btn-ghost" onclick="toast('تم حفظ المسودة')">${ic.dl} حفظ كمسودة</button>
+             <button class="btn btn-primary" onclick="toast('✨ جاري إنشاء ملف الشركة…')">${ic.sparkles} إنشاء الملف</button>` })}
+
+  <h3 class="sec-lbl">1 · نوع الملف — اختر الغرض</h3>
+  ${types}
+
+  <h3 class="sec-lbl" style="margin-top:24px">2 · المحتوى — اختر ما يظهر في الملف</h3>
+  ${content}
+
+  <h3 class="sec-lbl" style="margin-top:24px">3 · معاينة وإنشاء</h3>
+  <div class="dash-cols">
+    ${preview}
+    ${completion}
+  </div>
+
+  <div class="stack-actions" style="margin-top:20px">
+    <button class="btn btn-primary" onclick="toast('✨ جاري إنشاء ملف الشركة…')">${ic.sparkles} إنشاء الملف</button>
+    <button class="btn btn-ghost" onclick="toast('إرسال عبر واتساب…')">${ic.whatsapp} واتساب</button>
+    <button class="btn btn-ghost" onclick="toast('جاري تجهيز ملف PDF…')">${ic.pdf} تصدير PDF</button>
+    <button class="btn btn-ghost" onclick="toast('تم حفظ المسودة')">${ic.dl} حفظ كمسودة</button>
+  </div>
+</div>`;
+};
+
+/* ══════════════════════════════════════════════
    MQWEL+ · app.js — navigation, router, utilities
    ══════════════════════════════════════════════ */
 const NAV = [
@@ -1402,6 +1636,8 @@ const NAV = [
     { id:'users', lbl:'المستخدمين', icon:'users' },
     { id:'workers', lbl:'العمال', icon:'worker' },
     { id:'documents', lbl:'المستندات', icon:'file' },
+    { id:'docCenter', lbl:'مركز المستندات', icon:'folder' },
+    { id:'companyProfile', lbl:'ملف الشركة', icon:'building' },
   ]},
   { group:'المشاريع', items:[
     { id:'projects', lbl:'المشاريع', icon:'pin' },
