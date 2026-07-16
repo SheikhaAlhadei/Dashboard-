@@ -546,7 +546,13 @@ textarea.input{height:auto;min-height:74px;padding:10px 14px;resize:vertical;lin
 .type-card .tc-b span{font-size:11.5px;color:var(--txt-3);line-height:1.4;display:block;margin-top:2px}
 .type-card .tc-check{position:absolute;top:12px;left:12px;color:var(--clay);opacity:0;transition:.15s}
 .type-card.on .tc-check{opacity:1}
-.prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.prof-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cmp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cmp-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.cmp-top b{font-size:13px;font-weight:600}
+.cmp-top span{font-size:12px;color:var(--txt-2);font-weight:700}
+.cmp-meta{font-size:11px;color:var(--txt-3);margin-top:6px;display:inline-block}
+@media(max-width:640px){.cmp-grid{grid-template-columns:1fr;gap:14px}}
 .prof-stat{text-align:center;padding:12px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
 .prof-stat b{display:block;font-size:22px;font-weight:800;color:var(--clay);line-height:1.2}
 .prof-stat span{font-size:11px;color:var(--txt-3)}
@@ -1102,7 +1108,7 @@ pages.dashboard = () => {
     <div class="feed">
       <div class="feed-row"><span class="feed-dot ok">${ic.transfer}</span><span class="feed-body"><b>نقل «مطرقة»</b> إلى نزوى 1 — نفّذه: سالم</span><span class="feed-time num">قبل ساعة</span></div>
       <div class="feed-row"><span class="feed-dot warn">${ic.expired}</span><span class="feed-body">مستند <b>سند قبض</b> تجاوز تاريخ الانتهاء</span><span class="feed-time num">اليوم</span></div>
-      <div class="feed-row"><span class="feed-dot">${ic.box}</span><span class="feed-body">إدخال <b>100 وحدة أسمنت</b> إلى مسقط 1</span><span class="feed-time num">2026-04-15</span></div>
+      <div class="feed-row"><span class="feed-dot">${ic.box}</span><span class="feed-body">إدخال <b>100 وحدة أسمنت</b> إلى مسقط 1</span><span class="feed-time num">15-04-2026</span></div>
     </div>
   </section>`;
 
@@ -1201,10 +1207,10 @@ pages.documents = () => {
       <tbody>${rows}</tbody>
     </table></div>${tableFoot(1, (rows.match(/<tr>/g)||[]).length, (rows.match(/<tr>/g)||[]).length)}
   </section>`;
-  const company = `<tr><td><input type="checkbox"></td><td>${avatarCell('سند قبض','مستند مالي · PDF','سق')}</td><td class="td-dim">الشركة</td><td><span class="num td-muted">2026-05-07</span> ${chip('منتهي منذ 30 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>
-    <tr><td><input type="checkbox"></td><td>${avatarCell('السجل التجاري','مستند رسمي · PDF','سج')}</td><td class="td-dim">الشركة</td><td><span class="num td-muted">2027-01-10</span> ${chip('ساري','ok')}</td><td>${actBtns({del:true,dl:true})}</td></tr>`;
-  const projectsDocs = `<tr><td><input type="checkbox"></td><td>${avatarCell('مستند','مستند مشروع','مس')}</td><td class="td-muted">مسقط 1</td><td><span class="num td-muted">2026-04-01</span> ${chip('منتهي منذ 66 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>
-    <tr><td><input type="checkbox"></td><td>${avatarCell('مخطط الموقع','مستند مشروع','مخ')}</td><td class="td-muted">نزوى 1</td><td><span class="num td-muted">2026-03-24</span> ${chip('منتهي منذ 74 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>`;
+  const company = `<tr><td><input type="checkbox"></td><td>${avatarCell('سند قبض','مستند مالي · PDF','سق')}</td><td class="td-dim">الشركة</td><td><span class="num td-muted">07-05-2026</span> ${chip('منتهي منذ 30 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>
+    <tr><td><input type="checkbox"></td><td>${avatarCell('السجل التجاري','مستند رسمي · PDF','سج')}</td><td class="td-dim">الشركة</td><td><span class="num td-muted">10-01-2027</span> ${chip('ساري','ok')}</td><td>${actBtns({del:true,dl:true})}</td></tr>`;
+  const projectsDocs = `<tr><td><input type="checkbox"></td><td>${avatarCell('مستند','مستند مشروع','مس')}</td><td class="td-muted">مسقط 1</td><td><span class="num td-muted">01-04-2026</span> ${chip('منتهي منذ 66 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>
+    <tr><td><input type="checkbox"></td><td>${avatarCell('مخطط الموقع','مستند مشروع','مخ')}</td><td class="td-muted">نزوى 1</td><td><span class="num td-muted">24-03-2026</span> ${chip('منتهي منذ 74 يوم','danger')}</td><td>${actBtns({del:true,dl:true})}</td></tr>`;
   const workersDocs = `<tr><td><input type="checkbox"></td><td>${avatarCell('بطاقة الهوية','مستند عامل','هو')}</td><td class="td-muted">محمد</td><td><span class="num td-dim">— غير محدد —</span></td><td>${actBtns({del:true,dl:true})}</td></tr>`;
   return `<div class="page">
   ${pageHead({ crumbs:['الشركة','المستندات','القائمة'], title:'المستندات', sub:'مستندات الشركة والمشاريع والعمال — مقسّمة، مع تنبيهات قبل الانتهاء.',
@@ -1259,8 +1265,8 @@ pages.projects = () => {
     <div class="table-wrap"><table class="dt" id="tRent">
       <thead><tr>${th('العنصر')}${th('الجهة المؤجّرة')}${th('المشروع')}${th('العدد')}${th('تاريخ الاستلام')}${th('تاريخ التسليم')}${th('الحالة')}<th>اجراءات</th></tr></thead>
       <tbody>
-        <tr><td>${avatarCell('رافعة شوكية','معدة ثقيلة','رش')}</td><td class="td-muted">مؤسسة الرمال</td><td class="td-muted">مسقط 1</td><td class="num">1</td><td class="num td-dim">2026-05-01</td><td class="num td-dim">2026-06-01</td><td>${chip('قيد الإيجار','info')}</td><td>${actBtns({del:true})}</td></tr>
-        <tr><td>${avatarCell('سقالات','عدة موقع','سق')}</td><td class="td-muted">شركة البناء الحديث</td><td class="td-muted">نزوى 1</td><td class="num">20</td><td class="num td-dim">2026-04-10</td><td class="num td-dim">2026-05-10</td><td>${chip('تم التسليم','ok')}</td><td>${actBtns({del:true})}</td></tr>
+        <tr><td>${avatarCell('رافعة شوكية','معدة ثقيلة','رش')}</td><td class="td-muted">مؤسسة الرمال</td><td class="td-muted">مسقط 1</td><td class="num">1</td><td class="num td-dim">01-05-2026</td><td class="num td-dim">01-06-2026</td><td>${chip('قيد الإيجار','info')}</td><td>${actBtns({del:true})}</td></tr>
+        <tr><td>${avatarCell('سقالات','عدة موقع','سق')}</td><td class="td-muted">شركة البناء الحديث</td><td class="td-muted">نزوى 1</td><td class="num">20</td><td class="num td-dim">10-04-2026</td><td class="num td-dim">10-05-2026</td><td>${chip('تم التسليم','ok')}</td><td>${actBtns({del:true})}</td></tr>
       </tbody>
     </table></div>${tableFoot(1,2,2)}
   </section>
@@ -1304,9 +1310,9 @@ pages.movements = () => `
     <div class="table-wrap"><table class="dt" id="tMoves">
       <thead><tr><th style="width:36px"><input type="checkbox" aria-label="تحديد الكل"></th>${th('العنصر')}${th('النوع')}${th('من ← إلى')}${th('الكمية')}${th('حالة العنصر')}${th('المنفّذ')}${th('التاريخ')}<th>اجراءات</th></tr></thead>
       <tbody>
-        <tr><td><input type="checkbox"></td><td>${avatarCell('مطرقة','عدد يدوية','مط')}</td><td>${chip('نقل بين مشروعين','warn')}</td><td class="td-muted">مسقط 1 ← نزوى 1</td><td class="num"><b>1.00</b></td><td>${chip('جديد','info')}</td><td class="td-muted">سالم</td><td class="num td-dim">2026-05-03</td><td>${actBtns({del:true})}</td></tr>
-        <tr><td><input type="checkbox"></td><td>${avatarCell('asmant','مواد بناء','AS')}</td><td>${chip('دخول الى المخزن','info')}</td><td class="td-muted">— ← مسقط 1</td><td class="num"><b>+100.00</b></td><td>${chip('جديد','info')}</td><td class="td-muted">مصعب</td><td class="num td-dim">2026-04-15</td><td>${actBtns({del:true})}</td></tr>
-        <tr><td><input type="checkbox"></td><td>${avatarCell('غير محدد','بدون تصنيف','—')}</td><td>${chip('دخول الى المخزن','info')}</td><td class="td-dim">— ← —</td><td class="num"><b>+100.00</b></td><td>${chip('مستعمل','neutral')}</td><td class="td-dim">—</td><td class="num td-dim">2026-03-24</td><td>${actBtns({del:true})}</td></tr>
+        <tr><td><input type="checkbox"></td><td>${avatarCell('مطرقة','عدد يدوية','مط')}</td><td>${chip('نقل بين مشروعين','warn')}</td><td class="td-muted">مسقط 1 ← نزوى 1</td><td class="num"><b>1.00</b></td><td>${chip('جديد','info')}</td><td class="td-muted">سالم</td><td class="num td-dim">03-05-2026</td><td>${actBtns({del:true})}</td></tr>
+        <tr><td><input type="checkbox"></td><td>${avatarCell('asmant','مواد بناء','AS')}</td><td>${chip('دخول الى المخزن','info')}</td><td class="td-muted">— ← مسقط 1</td><td class="num"><b>+100.00</b></td><td>${chip('جديد','info')}</td><td class="td-muted">مصعب</td><td class="num td-dim">15-04-2026</td><td>${actBtns({del:true})}</td></tr>
+        <tr><td><input type="checkbox"></td><td>${avatarCell('غير محدد','بدون تصنيف','—')}</td><td>${chip('دخول الى المخزن','info')}</td><td class="td-dim">— ← —</td><td class="num"><b>+100.00</b></td><td>${chip('مستعمل','neutral')}</td><td class="td-dim">—</td><td class="num td-dim">24-03-2026</td><td>${actBtns({del:true})}</td></tr>
       </tbody>
     </table></div>${tableFoot(1,3,3)}
   </section>
@@ -1345,9 +1351,9 @@ pages.expiredReport = () => `
     <div class="table-wrap"><table class="dt" id="tExpired">
       <thead><tr>${th('القسم')}${th('الجهة')}${th('الاسم')}${th('تاريخ الانتهاء')}<th>اجراءات</th></tr></thead>
       <tbody>
-        <tr><td>${chip('الشركات','neutral')}</td><td class="td-dim">—</td><td>${avatarCell('سند قبض','مستند مالي','سق')}</td><td><span class="num td-muted">2026-05-07</span> ${chip('منتهي منذ 30 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
-        <tr><td>${chip('المشاريع','neutral')}</td><td class="td-muted">مسقط 1</td><td>${avatarCell('مستند','مستند مشروع','مس')}</td><td><span class="num td-muted">2026-04-01</span> ${chip('منتهي منذ 66 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
-        <tr><td>${chip('المشاريع','neutral')}</td><td class="td-muted">نزوى 1</td><td>${avatarCell('مخطط الموقع','مستند مشروع','مخ')}</td><td><span class="num td-muted">2026-03-24</span> ${chip('منتهي منذ 74 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
+        <tr><td>${chip('الشركات','neutral')}</td><td class="td-dim">—</td><td>${avatarCell('سند قبض','مستند مالي','سق')}</td><td><span class="num td-muted">07-05-2026</span> ${chip('منتهي منذ 30 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
+        <tr><td>${chip('المشاريع','neutral')}</td><td class="td-muted">مسقط 1</td><td>${avatarCell('مستند','مستند مشروع','مس')}</td><td><span class="num td-muted">01-04-2026</span> ${chip('منتهي منذ 66 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
+        <tr><td>${chip('المشاريع','neutral')}</td><td class="td-muted">نزوى 1</td><td>${avatarCell('مخطط الموقع','مستند مشروع','مخ')}</td><td><span class="num td-muted">24-03-2026</span> ${chip('منتهي منذ 74 يوم','danger')}</td><td>${actBtns({dl:true})}</td></tr>
       </tbody>
     </table></div>${tableFoot(1,3,3)}
   </section>
@@ -1372,15 +1378,15 @@ pages.payables = () => {
   const amt = (v)=>`<span class="num">${v}</span> <small class="td-dim">ر.ع</small>`;
   const row = (name,sub,ini,val,stTxt,stTone,date)=>`<tr><td>${avatarCell(name,sub,ini)}</td><td>${amt(val)}</td><td>${chip(stTxt,stTone)}</td><td class="num td-dim">${date}</td><td>${actBtns({del:true})}</td></tr>`;
   const duesTable = (tid,note,rows)=>`<section class="card">${toolbar({tid,ph:'بحث عن جهة…',note})}<div class="table-wrap"><table class="dt" id="${tid}"><thead><tr>${th('الجهة')}${th('المبلغ')}${th('حالة السداد')}${th('تاريخ الاستحقاق')}<th>اجراءات</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
-  const workers = row('محمد','عامل · هندي','مح','120.00','غير مدفوع','danger','2026-06-01')+row('سالم','عامل · عماني','سا','80.00','مدفوع','ok','2026-05-20');
-  const suppliers = row('asmant','مواد بناء','AS','350.00','مدفوع جزئياً','warn','2026-06-10')+row('مطرقة','عدد يدوية','مط','40.00','غير مدفوع','danger','2026-05-28');
-  const services = row('اشتراك كهرباء','خدمة شهرية','كه','45.00','مدفوع','ok','2026-06-05')+row('إيجار معدات','خدمة تشغيلية','مع','200.00','غير مدفوع','danger','2026-06-15')+row('اشتراك إنترنت','خدمة شهرية','إن','30.00','مدفوع','ok','2026-06-05');
-  const projects = row('مسقط 1','مستحقات مشروع','م1','500.00','غير مدفوع','danger','2026-06-30')+row('نزوى 1','مستحقات مشروع','ن1','150.00','مدفوع جزئياً','warn','2026-06-12');
+  const workers = row('محمد','عامل · هندي','مح','120.00','غير مدفوع','danger','01-06-2026')+row('سالم','عامل · عماني','سا','80.00','مدفوع','ok','20-05-2026');
+  const suppliers = row('asmant','مواد بناء','AS','350.00','مدفوع جزئياً','warn','10-06-2026')+row('مطرقة','عدد يدوية','مط','40.00','غير مدفوع','danger','28-05-2026');
+  const services = row('اشتراك كهرباء','خدمة شهرية','كه','45.00','مدفوع','ok','05-06-2026')+row('إيجار معدات','خدمة تشغيلية','مع','200.00','غير مدفوع','danger','15-06-2026')+row('اشتراك إنترنت','خدمة شهرية','إن','30.00','مدفوع','ok','05-06-2026');
+  const projects = row('مسقط 1','مستحقات مشروع','م1','500.00','غير مدفوع','danger','30-06-2026')+row('نزوى 1','مستحقات مشروع','ن1','150.00','مدفوع جزئياً','warn','12-06-2026');
   const sumRow = (n,v,pct,color)=>`<div class="sum-row"><span class="sn">${n}</span><span class="sum-bar"><i style="width:${pct}%;background:${color}"></i></span><span class="sv num">${v}</span></div>`;
   return `<div class="page">
   ${pageHead({ crumbs:['المالية','المستحقات المالية'], title:'المستحقات المالية', sub:'كل المبالغ المستحقة على الشركة — للعمال والموردين والخدمات والمشاريع في مكان واحد.',
     actions:`${notifBtn('payables')}<button class="btn btn-ghost" onclick="toast('جاري تجهيز ملف PDF…')">${ic.pdf} تصدير PDF</button><button class="btn btn-primary" onclick="openModal('payable')">${ic.plus} تسجيل مستحق</button>` })}
-  <div class="sched-banner"><span class="sb-ico">${ic.bellS}</span><div class="sb-body"><b>تذكير بجدولة مالية</b><span>رواتب العمال مستحقة 2026-06-01 · إيجار معدات 2026-06-15 — سيصلك إشعار قبل كل موعد.</span></div><button class="btn btn-warn btn-sm" onclick="openNotif('payables')">${ic.gear} ضبط التذكير</button></div>
+  <div class="sched-banner"><span class="sb-ico">${ic.bellS}</span><div class="sb-body"><b>تذكير بجدولة مالية</b><span>رواتب العمال مستحقة 01-06-2026 · إيجار معدات 15-06-2026 — سيصلك إشعار قبل كل موعد.</span></div><button class="btn btn-warn btn-sm" onclick="openNotif('payables')">${ic.gear} ضبط التذكير</button></div>
   <div class="report-band">
     ${kpi({ lbl:'إجمالي المستحقات', val:'1,515.00', unit:'ر.ع', tone:'ink', icon:ic.wallet, foot:'<span>عبر 4 فئات</span>' })}
     ${kpi({ lbl:'غير المدفوع', val:'1,060.00', unit:'ر.ع', tone:'danger', icon:ic.alertTri, foot:'<span class="trend warn">يحتاج سداد</span>' })}
@@ -1437,8 +1443,8 @@ pages.profile = () => `
     <div class="table-wrap"><table class="dt" id="tProfDocs">
       <thead><tr>${th('المستند')}${th('تاريخ الانتهاء')}${th('الحالة')}<th>اجراءات</th></tr></thead>
       <tbody>
-        <tr><td>${avatarCell('السجل التجاري','مستند رسمي','سج')}</td><td class="num td-muted">2027-01-10</td><td>${chip('ساري','ok')}</td><td>${actBtns({dl:true})}</td></tr>
-        <tr><td>${avatarCell('سند قبض','مستند مالي','سق')}</td><td class="num td-muted">2026-05-07</td><td>${chip('منتهي','danger')}</td><td>${actBtns({dl:true})}</td></tr>
+        <tr><td>${avatarCell('السجل التجاري','مستند رسمي','سج')}</td><td class="num td-muted">10-01-2027</td><td>${chip('ساري','ok')}</td><td>${actBtns({dl:true})}</td></tr>
+        <tr><td>${avatarCell('سند قبض','مستند مالي','سق')}</td><td class="num td-muted">07-05-2026</td><td>${chip('منتهي','danger')}</td><td>${actBtns({dl:true})}</td></tr>
       </tbody>
     </table></div>
   </section>
@@ -1623,11 +1629,14 @@ pages.companyProfile = () => {
     </div>
   </section>`;
 
-  const completion = `<section class="card">
-    <div class="panel-head" style="padding-bottom:10px"><div><h2 class="panel-title">اكتمال الملف</h2><p class="panel-sub">أكمل الأقسام لرفع جاهزية الملف</p></div><span class="chip info"><i></i>67%</span></div>
-    <div class="goal"><div class="goal-top"><b>المعلومات الأساسية</b><span class="goal-meta">مكتملة</span></div><div class="goal-bar"><div class="goal-fill" style="width:90%;background:#12A594"></div></div><span class="goal-pct num">90%</span></div>
-    <div class="goal"><div class="goal-top"><b>الاعتمادات والشهادات</b><span class="goal-meta">شبه مكتملة</span></div><div class="goal-bar"><div class="goal-fill" style="width:70%;background:#6E56CF"></div></div><span class="goal-pct num">70%</span></div>
-    <div class="goal"><div class="goal-top"><b>بيانات التواصل</b><span class="goal-meta">ناقصة</span></div><div class="goal-bar"><div class="goal-fill" style="width:40%;background:#F5A524"></div></div><span class="goal-pct num">40%</span></div>
+  const cmp = (name,meta,pct,color)=>`<div class="cmp"><div class="cmp-top"><b>${name}</b><span class="num">${pct}%</span></div><div class="goal-bar"><div class="goal-fill" style="width:${pct}%;background:${color}"></div></div><span class="cmp-meta">${meta}</span></div>`;
+  const completion = `<section class="card" style="padding:16px 20px">
+    <div class="panel-head" style="padding:0 0 12px"><div><h2 class="panel-title">اكتمال الملف</h2><p class="panel-sub">أكمل الأقسام لرفع جاهزية الملف</p></div><span class="chip info"><i></i>67%</span></div>
+    <div class="cmp-grid">
+      ${cmp('المعلومات الأساسية','مكتملة',90,'#12A594')}
+      ${cmp('الاعتمادات والشهادات','شبه مكتملة',70,'#6E56CF')}
+      ${cmp('بيانات التواصل','ناقصة',40,'#F5A524')}
+    </div>
   </section>`;
 
   return `<div class="page">
@@ -1642,10 +1651,8 @@ pages.companyProfile = () => {
   ${content}
 
   <h3 class="sec-lbl" style="margin-top:24px">3 · معاينة وإنشاء</h3>
-  <div class="dash-cols">
-    ${preview}
-    ${completion}
-  </div>
+  ${completion}
+  <div style="margin-top:16px">${preview}</div>
 
   <div class="stack-actions" style="margin-top:20px">
     <button class="btn btn-primary" onclick="toast('✨ جاري إنشاء ملف الشركة…')">${ic.sparkles} إنشاء الملف</button>
