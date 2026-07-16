@@ -551,6 +551,22 @@ textarea.input{height:auto;min-height:74px;padding:10px 14px;resize:vertical;lin
 .prof-stat b{display:block;font-size:22px;font-weight:800;color:var(--clay);line-height:1.2}
 .prof-stat span{font-size:11px;color:var(--txt-3)}
 @media(max-width:560px){.prof-stats{grid-template-columns:repeat(2,1fr)}}
+/* soft attention banner (dashboard) */
+.attn-banner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px 22px;border-radius:var(--r-lg);margin-bottom:16px;background:linear-gradient(135deg,#FBF7EF 0%,#F6F4FC 100%);border:1px solid var(--line);box-shadow:var(--shadow)}
+.attn-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;background:var(--warn-bg);color:var(--warn)}
+.attn-txt{flex:1;min-width:190px}
+.attn-txt b{display:block;font-size:15px;font-weight:700;color:var(--ink)}
+.attn-txt span{font-size:12.5px;color:var(--txt-2);display:block;margin-top:3px;line-height:1.5}
+.attn-stats{display:flex;gap:10px;flex-wrap:wrap}
+.attn-stat{text-align:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 16px;min-width:76px}
+.attn-stat b{display:block;font-size:20px;font-weight:800;line-height:1.15}
+.attn-stat span{font-size:10.5px;color:var(--txt-3)}
+@media(max-width:640px){.attn-banner{padding:14px 16px;gap:12px}.attn-stats{width:100%}.attn-stat{flex:1}}
+/* preview tables (ملف الشركة) — fit container, tidy */
+.prof-table{min-width:0}
+.prof-table thead th{position:static;background:transparent;border-bottom:1px solid var(--line)}
+.prof-table tbody td{padding:11px 14px}
+.prof-table thead th{padding:9px 14px}
 /* misc */
 .stack-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 </style>
@@ -999,6 +1015,7 @@ function openNotif(section){
   showVeil();
 }
 const DASH_SECTIONS = [
+  {k:'attention', n:'شريط تنبيه اليوم'},
   {k:'kpis', n:'المؤشرات الأساسية (4 كروت)'},
   {k:'alerts', n:'التنبيهات'},
   {k:'aiActions', n:'الإجراءات (المساعد الذكي)'},
@@ -1027,6 +1044,17 @@ function closeModal(){ document.getElementById('modalVeil').classList.remove('op
 const dashPrefs = {};
 pages.dashboard = () => {
   const show = k => dashPrefs[k] !== false;
+
+  // شريط تنبيه اليوم — بأسلوب هادئ ولون متناسق مع الثيم
+  const attnBanner = `<div class="attn-banner">
+    <span class="attn-ico">${ic.alertTri}</span>
+    <div class="attn-txt"><b>شركتك تحتاج انتباهك اليوم</b><span>3 إقامات تنتهي خلال 7 أيام · مشروع واحد تجاوز الميزانية · مستندان منتهيان</span></div>
+    <div class="attn-stats">
+      <div class="attn-stat"><b class="num" style="color:var(--warn)">5</b><span>إجراءات للمتابعة</span></div>
+      <div class="attn-stat"><b class="num" style="color:var(--clay)">23</b><span>عامل تحت إدارتك</span></div>
+      <div class="attn-stat"><b class="num" style="color:var(--info)">4</b><span>مشاريع نشطة</span></div>
+    </div>
+  </div>`;
 
   // أهم 4 مؤشرات
   const kpis = `<div class="kpi-grid">
@@ -1102,6 +1130,7 @@ pages.dashboard = () => {
              <button class="btn btn-ghost" onclick="toast('تحديث البيانات…')">${ic.refresh} تحديث</button>
              <button class="btn btn-warn" onclick="document.getElementById('alertsPanel')?.scrollIntoView({behavior:'smooth',block:'center'});toast('لديك 4 تحذيرات تحتاج معالجة')">${ic.alertTri} تحذيرات <span class="btn-badge num">4</span></button>
              <button class="btn btn-primary" onclick="go('projects')">${ic.pin} إدارة المشاريع</button>` })}
+  ${show('attention')?attnBanner:''}
   ${show('kpis')?kpis:''}
   ${pair(alerts,aiActions,'alerts','aiActions')}
   ${show('progress')?`<div style="margin-top:16px">${progress}</div>`:''}
@@ -1578,14 +1607,14 @@ pages.companyProfile = () => {
         <div style="display:flex;gap:8px;flex-wrap:wrap">${svc('إنشاءات مدنية')}${svc('الطرق والبنية التحتية')}${svc('أعمال الصرف الصحي')}${svc('التشطيبات')}</div>
       </div>
       <div><div class="sec-lbl">المشاريع المنجزة</div>
-        <div class="table-wrap"><table class="dt" id="tProfProj"><thead><tr>${th('المشروع')}${th('النوع')}${th('القيمة')}${th('الحالة')}</tr></thead><tbody>
+        <div class="table-wrap"><table class="dt prof-table" id="tProfProj"><thead><tr><th>المشروع</th><th>النوع</th><th>القيمة</th><th>الحالة</th></tr></thead><tbody>
           <tr><td class="td-muted">نزوى السكني</td><td class="td-muted">إنشاءات</td><td class="num">٤٥,٠٠٠ ر.ع</td><td>${chip('نشط','info')}</td></tr>
           <tr><td class="td-muted">مسقط التجاري</td><td class="td-muted">تشطيبات</td><td class="num">٢٨,٠٠٠ ر.ع</td><td>${chip('منجز','ok')}</td></tr>
           <tr><td class="td-muted">صلالة الطرق</td><td class="td-muted">بنية تحتية</td><td class="num">٦٢,٠٠٠ ر.ع</td><td>${chip('منجز','ok')}</td></tr>
         </tbody></table></div>
       </div>
       <div><div class="sec-lbl">التصنيفات والشهادات</div>
-        <div class="table-wrap"><table class="dt" id="tProfCert"><thead><tr>${th('الشهادة')}${th('الجهة')}${th('الحالة')}</tr></thead><tbody>
+        <div class="table-wrap"><table class="dt prof-table" id="tProfCert"><thead><tr><th>الشهادة</th><th>الجهة</th><th>الحالة</th></tr></thead><tbody>
           <tr><td class="td-muted">تصنيف المقاولين — درجة أولى</td><td class="td-muted">وزارة الاقتصاد</td><td>${chip('سارية','ok')}</td></tr>
           <tr><td class="td-muted">السجل التجاري</td><td class="td-muted">وزارة التجارة</td><td>${chip('ساري','ok')}</td></tr>
           <tr><td class="td-muted">عضوية الغرفة</td><td class="td-muted">غرفة التجارة</td><td>${chip('سارية','ok')}</td></tr>
